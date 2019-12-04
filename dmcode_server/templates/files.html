@@ -20,12 +20,15 @@
             <header class="card-header">File info</header>
             <div class="card-content">
                 <div class="inner">
-                    <p id="filesize"></p>
-                    <p id="fileext"></p>
-                    <p id="filehash"></p>
-                    <p id="createtime"></p>
-                    <p id="updatetime"></p>
-                    <p id="fileview"></p>
+                    <div style="display:none;" id="file-info">
+                        <p id="link"><span class="index"></span> <span class="value"></span></p>
+                        <p id="filesize"><span class="index">File size (kb):</span> <span class="value"></span></p>
+                        <p id="fileext"><span class="index">File extension:</span> <span class="value"></span></p>
+                        <p id="filehash"><span class="index">md5:</span> <span class="value"></span></p>
+                        <p id="createtime"><span class="index">File created:</span> <span class="value"></span></p>
+                        <p id="updatetime"><span class="index">Last update:</span> <span class="value"></span></p>
+                        <p id="fileview"><span class="index">Views:</span> <span class="value"></span></p>
+                    </div>
                 </div>
             </div>
         </div>

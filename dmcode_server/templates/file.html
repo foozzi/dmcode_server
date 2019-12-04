@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<hr />
+<a href="/paste/{{file.paste.id}}"><< Back</a>
+<hr />
+<pre class="content">
+<code>
+{{file.filecontent}}
+</code>
+</pre>
+{% endblock %}

@@ -10,13 +10,21 @@ $(document).ready(function(){
                     //                    
                 }
                 file = data.file
-                $('#filesize').html('File size: '+file.filesize+' kb')
-                $('#fileext').html('File Extension: '+file.fileext)
-                $('#filehash').html('md5: '+file.filehash)
-                $('#createtime').html('File create: '+file.createtime)
-                $('#updatetime').html('File last update: '+file.updatetime)
-                $('#fileview').html('File views: '+file.fileview)
+                $('#file-info').hide()
+                $('#file-info #link').html('<a href="/file/'+file.id+'">Open file</a>')
+                $('#filesize span.value').html(file.filesize)
+                $('#fileext span.value').html(file.fileext)
+                $('#filehash span.value').html(file.filehash)
+                $('#createtime span.value').html(file.createtime)
+                $('#updatetime span.value').html(file.updatetime)
+                $('#fileview span.value').html(file.fileview)
+                $('#file-info').show()
             }
         })
+        return false
     })
+    
+    $('pre.content code').each(function(i, block) {
+        hljs.lineNumbersBlock(block);
+    });
 })

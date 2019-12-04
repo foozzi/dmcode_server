@@ -22,6 +22,11 @@ def _get_paste(id):
         abort(404)
     return paste
 
+def _get_file(id):
+    file = Files.query.get_or_404(id)
+    if not file:
+        abort(404)
+    return file
 
 @bp.route("paste/<id>", methods=['GET'])
 def one_paste(id):
@@ -37,9 +42,14 @@ def fetch_file_info():
     file = Files.query.filter_by(id=request.values['id']).first()
 
     return {'error': False, 'file': {
-        'filesize': file.filesize, 
-        'fileext': file.fileext, 
-        'filehash': file.filehash, 
-        'createtime': file.createtime, 
-        'updatetime': file.updatetime, 
+        'id': file.id,
+        'filesize': file.filesize,
+        'fileext': file.fileext,
+        'filehash': file.filehash,
+        'createtime': file.createtime,
+        'updatetime': file.updatetime,
         'fileview': file.fileview}}
+
+@bp.route('file/<id>', methods=['GET'])
+def file(id):
+    return render_template('file.html', file=_get_file(id))

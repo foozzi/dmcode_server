@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{% if pastes %}
+    {% for paste in pastes %}
+    <a href="http://localhost:5000/{{paste.id}}">{{paste.name}}</a>
+    {% endfor %}
+{% endif %}
+{% endblock %}

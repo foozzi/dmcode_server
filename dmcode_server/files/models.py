@@ -13,13 +13,15 @@ class Files(db.Model):
     createtime = db.Column(db.Integer)
     fileview = db.Column(db.Integer)
 
-    app_id = db.Column(db.Integer, db.ForeignKey('apps.id'), nullable=False)
-    app = db.relationship('Apps', backref=db.backref('files', lazy=True))
+    paste_id = db.Column(db.Integer, db.ForeignKey('pastes.id'), nullable=False)
+    paste = db.relationship('Pastes', backref=db.backref('files', lazy=True))
 
 
-class Apps(db.Model):
-    __tablename__ = 'apps'
+class Pastes(db.Model):
+    __tablename__ = 'pastes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     token = db.Column(db.String(40), nullable=False)
     createtime = db.Column(db.Integer)
+    updatetime = db.Column(db.Integer)
+

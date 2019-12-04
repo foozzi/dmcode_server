@@ -42,9 +42,10 @@ def create_app(test_config=None):
     db.init_app(app)
     app.cli.add_command(init_db_command)
 
-    from dmcode_server import files
+    from dmcode_server import files, frontend
 
     app.register_blueprint(files.bp)
+    app.register_blueprint(frontend.bp)
 
     app.add_url_rule('/', endpoint='index')
 

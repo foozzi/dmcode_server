@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+        {% for file in paste.files %}
+        {{file.filename}}<br />
+        {% endfor %}
+    </div>
+    <div class="col-9">
+        <pre>
+            <code>
+            {% for file in paste.files %}
+            {{file.filecontent}}<br />
+            {% endfor %}
+            </code>
+        </pre>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
 import sys
 from flask import Blueprint, redirect, request, url_for
 from dmcode_server import db
-from dmcode_server.files.models import Files, Apps
+from dmcode_server.files.models import Files, Pastes
 from werkzeug import secure_filename, exceptions
 import uuid
 import pickle
@@ -21,18 +21,19 @@ def fetch_token():
     if name_paste is None or name_paste.split() == "":
         return {'error': True, 'message': 'name project is not set'}
 
-    app = Apps.query.filter_by(name=name_paste).first()
-    if app:
-        return {'error': False, 'id': app.id, 'token': app.token}
+    paste = Pastes.query.filter_by(name=name_paste).first()
+    if paste:
+        return {'error': False, 'id': paste.id, 'token': paste.token}
 
-    app = Apps()
-    app.name = name_paste
-    app.token = str(uuid.uuid4())
-    app.createtime = int(time())
-    db.session.add(app)
+    paste = Pastes()
+    paste.name = name_paste
+    paste.token = str(uuid.uuid4())
+    paste.createtime = int(time())
+    paste.updatetime = int(time())
+    db.session.add(paste)
     db.session.commit()
 
-    return {'error': False, 'id': app.id, 'token': app.token}
+    return {'error': False, 'id': paste.id, 'token': paste.token}
 
 
 @bp.route("paste_files", methods=["POST"])
@@ -54,8 +55,8 @@ def deploy():
     pkg.save(os.path.join(tmp_dir, pkg_filename))
 
     """get app paste for files"""
-    apps = Apps.query.filter_by(token=token).first()
-    if not apps:
+    paste = Pastes.query.filter_by(token=token).first()
+    if not paste:
         return {'error': True, 'message': 'token is not found in db'}
 
     with open(os.path.join(tmp_dir, pkg_filename), 'rb') as f:
@@ -69,14 +70,18 @@ def deploy():
                     filename=dl['name'],
                     filesize=len(dl['content']),
                     fileext=fileext,
-                    filecontent=dl['content'],
+                    filecontent=dl['content'].decode('utf-8'),
                     filehash=filehash,
                     createtime=int(time()),
-                    app_id=apps.id
+                    paste_id=paste.id
                 )
 
                 db.session.add(files)
                 db.session.commit()
+        """update updatetime in current paste"""
+        paste.updatetime=int(time())
+        db.session.add(paste)
+        db.session.commit()
 
     shutil.rmtree(tmp_dir)
 

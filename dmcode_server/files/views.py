@@ -73,6 +73,7 @@ def deploy():
                     filecontent=dl['content'].decode('utf-8'),
                     filehash=filehash,
                     createtime=int(time()),
+                    updatetime=int(time()),
                     paste_id=paste.id
                 )
 

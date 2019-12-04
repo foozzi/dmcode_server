@@ -4,18 +4,31 @@
 <div class="container">
   <div class="row">
     <div class="col-3">
-        {% for file in paste.files %}
-        {{file.filename}}<br />
-        {% endfor %}
+        <div class="card">
+            <header class="card-header">{{paste.name}}</header>
+            <div class="card-content">
+                <div class="inner">
+                    {% for file in paste.files %}
+                    <a id="file" file_id="{{file.id}}" href="#!">{{file.filename}}</a><br />
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-9">
-        <pre>
-            <code>
-            {% for file in paste.files %}
-            {{file.filecontent}}<br />
-            {% endfor %}
-            </code>
-        </pre>
+        <div class="card">
+            <header class="card-header">File info</header>
+            <div class="card-content">
+                <div class="inner">
+                    <p id="filesize"></p>
+                    <p id="fileext"></p>
+                    <p id="filehash"></p>
+                    <p id="createtime"></p>
+                    <p id="updatetime"></p>
+                    <p id="fileview"></p>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 </div>

@@ -11,6 +11,7 @@ class Files(db.Model):
     filecontent = db.Column(db.String())
     filehash = db.Column(db.String(), nullable=False)
     createtime = db.Column(db.Integer)
+    updatetime = db.Column(db.Integer)
     fileview = db.Column(db.Integer)
 
     paste_id = db.Column(db.Integer, db.ForeignKey('pastes.id'), nullable=False)

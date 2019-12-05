@@ -1,12 +1,17 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<hr />
-<a href="/paste/{{file.paste.id}}"><< Back</a>
-<hr />
-<pre class="content">
-<code>
-{{file.filecontent}}
-</code>
-</pre>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <a href="/paste/{{file.paste.id}}"><< Back</a>
+            <a href="/dl/{{file.id}}">Download</a>
+            <pre class="content">
+                <code>
+                    {{file.filecontent}}
+                </code>
+            </pre>
+        </div>
+    </div>
+</div>
 {% endblock %}

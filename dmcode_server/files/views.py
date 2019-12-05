@@ -18,7 +18,7 @@ bp = Blueprint('files', __name__, url_prefix='/files')
 def fetch_token():
     """check if not set project name for uploading files"""
     name_paste = request.values.get('name_paste').strip()
-    if name_paste is None or name_paste.split() == "":
+    if name_paste is None or name_paste.strip() == "":
         return {'error': True, 'message': 'name project is not set'}
 
     paste = Pastes.query.filter_by(name=name_paste).first()
@@ -80,7 +80,7 @@ def deploy():
                 db.session.add(files)
                 db.session.commit()
         """update updatetime in current paste"""
-        paste.updatetime=int(time())
+        paste.updatetime = int(time())
         db.session.add(paste)
         db.session.commit()
 

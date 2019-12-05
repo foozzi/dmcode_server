@@ -1,9 +1,22 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-{% if pastes %}
-    {% for paste in pastes %}
-    <a href="http://localhost:5000/{{paste.id}}">{{paste.name}}</a>
-    {% endfor %}
-{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+            <header class="card-header">All public pastes</header>
+            {% if pastes %} 
+                {% for paste in pastes %}
+                <div class="card-content">
+                    <div class="inner"><a href="/paste/{{paste.id}}">{{paste.name}}</a> - [{{paste.updatetime|strftime}}]</div>
+                </div>
+                {% endfor %}
+            {% endif %}
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

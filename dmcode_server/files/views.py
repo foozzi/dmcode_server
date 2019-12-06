@@ -66,8 +66,31 @@ def deploy():
                 fn, fileext = os.path.splitext(dl['name'])
                 """first check if file hash exists in db and update if need"""
                 filehash = hashlib.md5(dl['content']).hexdigest()
+                """check file and update if need"""
+                skip = False
+                db_paste = Pastes.query.filter_by(token=token).first()
+                if db_paste:
+                    for db_file in db_paste.files:
+                        if db_file.filename == dl['name'] \
+                                and db_file.filepath == dl['path']:
+                            if db_file.filehash != filehash:
+                                db_file.filecontent = dl['content'].decode(
+                                    'utf-8')
+                                db_file.updatetime = int(time())
+                                db.session.add(db_file)
+                                db.session.commit()
+                            skip = True
+                    """update paste"""
+                    db_paste.updatetime = int(time())
+                    db.session.add(db_paste)
+                    db.session.commit()
+
+                """skip insert updated file"""
+                if skip:
+                    continue
                 files = Files(
                     filename=dl['name'],
+                    filepath=dl['path'],
                     filesize=len(dl['content']),
                     fileext=fileext,
                     filecontent=dl['content'].decode('utf-8'),

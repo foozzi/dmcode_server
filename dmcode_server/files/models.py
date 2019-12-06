@@ -6,6 +6,7 @@ class Files(db.Model):
     __tablename__ = 'files'
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(), nullable=False)
+    filepath = db.Column(db.String(), default='')
     filesize = db.Column(db.Integer, nullable=False)
     fileext = db.Column(db.String())
     filecontent = db.Column(db.String())
@@ -14,7 +15,8 @@ class Files(db.Model):
     updatetime = db.Column(db.Integer, nullable=False)
     fileview = db.Column(db.Integer, default=0)
 
-    paste_id = db.Column(db.Integer, db.ForeignKey('pastes.id'), nullable=False)
+    paste_id = db.Column(db.Integer, db.ForeignKey(
+        'pastes.id'), nullable=False)
     paste = db.relationship('Pastes', backref=db.backref('files', lazy=True))
 
 
@@ -25,4 +27,3 @@ class Pastes(db.Model):
     token = db.Column(db.String(40), nullable=False)
     createtime = db.Column(db.Integer, nullable=False)
     updatetime = db.Column(db.Integer, nullable=False)
-

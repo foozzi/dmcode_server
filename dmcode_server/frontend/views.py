@@ -41,7 +41,12 @@ def _get_file(id):
 @bp.route("paste/<id>", methods=['GET'])
 def one_paste(id):
     paste = _get_paste(id)
-    return render_template('files.html', paste=paste)
+    files = {}
+    for file in paste.files:
+        if file.filepath not in files:
+            files[file.filepath] = []
+        files[file.filepath].append(file)
+    return render_template('files.html', dirs=files, paste_name=paste.name)
 
 
 @bp.route('fetch_file_info', methods=['POST'])
@@ -65,6 +70,7 @@ def fetch_file_info():
 def file(id):
     return render_template('file.html', file=_get_file(id))
 
+
 @bp.route('dl/<id>', methods=['GET'])
 def dl(id):
     from random import seed
@@ -72,7 +78,8 @@ def dl(id):
     seed(1)
     file = _get_file(id)
     randname = random()
-    tmp_dir = os.path.join(app.config['TMP_STORAGE'], 'dl_{}_{}_{}'.format(int(time()), file.filehash, randname))
+    tmp_dir = os.path.join(app.config['TMP_STORAGE'], 'dl_{}_{}_{}'.format(
+        int(time()), file.filehash, randname))
     os.makedirs(tmp_dir, exist_ok=False)
 
     dl_file = os.path.join(tmp_dir, str(randname) + file.fileext)

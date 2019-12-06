@@ -7,7 +7,7 @@ $(document).ready(function(){
             data: 'id='+file_id,
             success: function(data){
                 if(data.error == true){
-                    //                    
+                    //
                 }
                 file = data.file
                 $('#file-info').hide()
@@ -23,7 +23,7 @@ $(document).ready(function(){
         })
         return false
     })
-    
+
     $('pre.content code').each(function(i, block) {
         hljs.lineNumbersBlock(block);
     });

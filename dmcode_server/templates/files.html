@@ -10,11 +10,14 @@
     <div class="row">
     <div class="col-3">
         <div class="card">
-            <header class="card-header">{{paste.name}}</header>
+            <header class="card-header">{{paste_name}}</header>
             <div class="card-content">
-                <div class="inner">
-                    {% for file in paste.files %}
-                    <a id="file" file_id="{{file.id}}" href="#!">{{file.filename}}</a><br />
+                <div class="inner" id="file-list">
+                    {% for dir in dirs %}
+                    <span id="dir">{{dir}}/</span><br />
+                    {% for file in dirs[dir] %}
+                        &nbsp;<a id="file" file_id="{{file.id}}" href="#!">{{file.filename}}</a><br />
+                    {% endfor %}                    
                     {% endfor %}
                 </div>
             </div>
@@ -37,6 +40,7 @@
                 </div>
             </div>
         </div>
+
     </div>
   </div>  
 </div>

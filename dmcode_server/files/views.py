@@ -1,5 +1,4 @@
-import sys
-from flask import Blueprint, redirect, request, url_for
+from flask import Blueprint, request
 from dmcode_server import db
 from dmcode_server.files.models import Files, Pastes
 from werkzeug import secure_filename, exceptions
@@ -99,7 +98,7 @@ def deploy():
                 )
 
                 paste.files.append(files)
-                paste.updatetime = int(time())    
+                paste.updatetime = int(time())
 
                 db.session.add(paste)
                 db.session.commit()

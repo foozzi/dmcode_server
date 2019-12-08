@@ -1,10 +1,7 @@
-import sys
 import os
-from flask import Blueprint, redirect, request, url_for, render_template, \
-    abort, jsonify, send_file, Response
+from flask import Blueprint, request, render_template, abort, Response
 from dmcode_server import db
 from dmcode_server.files.models import Files, Pastes
-from werkzeug import secure_filename, exceptions
 from time import time
 from datetime import datetime
 from flask import current_app as app

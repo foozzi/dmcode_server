@@ -77,8 +77,7 @@ def deploy():
                                 db_file.filecontent = dl['content'].decode(
                                     'utf-8')
                                 db_file.updatetime = int(time())
-                                db.session.add(db_file)
-                                db.session.commit()
+                                db_paste.append(db_file)
                             skip = True
                     """update paste"""
                     db_paste.updatetime = int(time())
@@ -96,16 +95,14 @@ def deploy():
                     filecontent=dl['content'].decode('utf-8'),
                     filehash=filehash,
                     createtime=int(time()),
-                    updatetime=int(time()),
-                    paste_id=paste.id
+                    updatetime=int(time())
                 )
 
-                db.session.add(files)
+                paste.files.append(files)
+                paste.updatetime = int(time())    
+
+                db.session.add(paste)
                 db.session.commit()
-        """update updatetime in current paste"""
-        paste.updatetime = int(time())
-        db.session.add(paste)
-        db.session.commit()
 
     shutil.rmtree(tmp_dir)
 

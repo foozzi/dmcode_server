@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+from celery import Celery
 import os
 from flask.cli import with_appcontext
 import click
@@ -33,20 +34,34 @@ def create_app(test_config=None):
     )
 
     if test_config is None:
-        # load prod config
+        # load the instance config, if it exists, when not testing
         app.config.from_pyfile("config.py", silent=True)
     else:
-        # load dev config
+        # load the test config if passed in
         app.config.update(test_config)
 
     db.init_app(app)
     app.cli.add_command(init_db_command)
-    
+
     with app.app_context():
         from dmcode_server import files, frontend
 
         app.register_blueprint(files.bp)
         app.register_blueprint(frontend.bp)
+
+        """test scheduler"""
+        # paste_cleaner = {"time_scheduler": {"task": "files.tasks.paste_cleaner","schedule": 259200.0,}} # every 3 days
+
+        #celery = Celery(app.name)
+        # celery.conf.update(
+        #    result_backend=app.config["CELERY_RESULT_BACKEND"],
+        #    broker_url=app.config["CELERY_BROKER_URL"],
+        #    timezone="UTC",
+        #    task_serializer="json",
+        #    accept_content=["json"],
+        #    result_serializer="json",
+        #    beat_schedule=celery_beat_schedule,
+        # )
 
         app.add_url_rule('/', endpoint='index')
 
@@ -64,4 +79,3 @@ def init_db_command():
     """delete all data and create new tables"""
     init_db()
     click.echo("init db")
-

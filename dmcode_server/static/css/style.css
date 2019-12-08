@@ -1,18 +1,13 @@
 div#file-info span.index {
     font-weight: bold;
 }
-td.hljs-ln-code, td.hljs-ln-numbers {
-    border: 0 !important;
-    border:
-}
-.hljs-ln tr:hover {
-    background: black;
-    cursor: pointer;
-}
-table.hljs-ln {
-    margin: 0 !important;
-}
 #dir {
     margin-top: 7px;
     display: inline-block;
+}
+table.highlighttable td.linenos {
+    width: 0 !important;
+}
+table.highlighttable td.code {
+    width: 100% !important;
 }

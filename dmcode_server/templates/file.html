@@ -1,17 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="container">
     <div class="row">
         <div class="col-12">
-            <a href="/paste/{{file.paste.id}}"><< Back</a>
-            <a href="/dl/{{file.id}}">Download</a>
-            <pre class="content">
-                <code>
-                    {{file.filecontent}}
-                </code>
-            </pre>
+                    <a href="/paste/{{file.paste.id}}"><< Back</a>
+                    [{{file.filename}}]
+                    <a href="/file/dl/{{file.id}}">Download</a>
+                    <a href="/file/raw/{{file.id}}">Raw</a>
+                        {{file.filename | highlighter(file.filecontent) | safe}}
         </div>
     </div>
-</div>
 {% endblock %}

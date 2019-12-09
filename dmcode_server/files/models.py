@@ -25,5 +25,6 @@ class Pastes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     token = db.Column(db.String(40), nullable=False)
+    expiretime = db.Column(db.Integer, nullable=False)
     createtime = db.Column(db.Integer, nullable=False)
     updatetime = db.Column(db.Integer, nullable=False)

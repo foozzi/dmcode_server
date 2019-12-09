@@ -32,6 +32,9 @@ def _jinja2_filter_highlighter(filename, code):
     lexer = pygments.lexers.get_lexer_for_filename(filename)
     return highlight(code, lexer, HtmlFormatter(linenos=True))
 
+@app.template_filter('len')
+def _jinja2_filter_len(arr):
+    return len(arr)
 
 @app.template_filter('strftime')
 def _jinja2_filter_datetime(unixtime, fmt="%Y-%m-%d %H:%M:%s"):

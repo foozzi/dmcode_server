@@ -12,13 +12,24 @@ from flask import current_app as app
 
 bp = Blueprint('files', __name__, url_prefix='/files')
 
+expire_types = {'10min': 600, '1hour': 3600,
+                '1day': 86400, '1week': 604800, '1month': 2629746}
+
 
 @bp.route("fetch_token", methods=['POST'])
 def fetch_token():
     """check if not set project name for uploading files"""
     name_paste = request.values.get('name_paste').strip()
+    expire_paste = request.values.get('expire_paste').strip()
+
     if name_paste is None or name_paste.strip() == "":
         return {'error': True, 'message': 'name project is not set'}
+    elif expire_paste is None or expire_paste.strip() == "":
+        """default expire time in sec"""
+        expire_paste = expire_types['1month']
+    elif expire_paste:
+        if expire_paste not in expire_types:
+            return {'error': True, 'message': 'error format expire paste `{}`'.format(expire_paste)}
 
     paste = Pastes.query.filter_by(name=name_paste).first()
     if paste:
@@ -27,6 +38,7 @@ def fetch_token():
     paste = Pastes()
     paste.name = name_paste
     paste.token = str(uuid.uuid4())
+    paste.expiretime = expire_types[expire_paste]
     paste.createtime = int(time())
     paste.updatetime = int(time())
     db.session.add(paste)
@@ -105,4 +117,4 @@ def deploy():
 
     shutil.rmtree(tmp_dir)
 
-    return {'error': False, 'result': True}
+    return {'error': False, 'link': request.host_url + 'paste/{}'.format(paste.id)}

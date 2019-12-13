@@ -132,3 +132,4 @@ dmypy.json
 dmc.ini
 todo
 instance/
+celerybeat-schedule

@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="main container">
+    <h1>DMCode paste service</h1>
+    <div class="row">
+        <div class="col-4">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" width="200px">
+        </div>
+        <div class="col-6">
+            Server app for :rocket:DMCode for uploads your project files like a pastebin but as fast, simple and powerful     
+        </div>
+    </div>
+    <hr />
+    <h2>How to use?</h2>
+    <p>install DMCODE:</p>
+    <pre>
+        pip install dmcode
+    </pre>
+    <p>navigate to your project in terminal 'cd /your/project' and then just type:</p>
+    <pre>
+        dmcode --paste
+    </pre>
+</div>
+{% endblock %}

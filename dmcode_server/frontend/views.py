@@ -32,13 +32,20 @@ def _jinja2_filter_highlighter(filename, code):
     lexer = pygments.lexers.get_lexer_for_filename(filename)
     return highlight(code, lexer, HtmlFormatter(linenos=True))
 
+
 @app.template_filter('len')
 def _jinja2_filter_len(arr):
     return len(arr)
 
+
 @app.template_filter('strftime')
 def _jinja2_filter_datetime(unixtime, fmt="%Y-%m-%d %H:%M:%s"):
     return datetime.utcfromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S')
+
+
+@bp.route('/', methods=['GET'])
+def lanfing():
+    return render_template('landing.html')
 
 
 @bp.route("all_public", methods=['GET'])

@@ -131,5 +131,6 @@ dmypy.json
 
 dmc.ini
 todo
-instance/
+instance/db.sqlite
+instance/tmp
 celerybeat-schedule

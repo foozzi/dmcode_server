@@ -1,6 +1,6 @@
 from celery import Celery
 from dmcode_server import create_app
-
+from dmcode_server import tasks
 
 def make_celery(app):
     # set redis url vars
@@ -10,18 +10,16 @@ def make_celery(app):
     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
     """uncomment for non-pereodical call tasks"""
-    #TaskBase = celery.Task
+    TaskBase = celery.Task
 
-    # class ContextTask(TaskBase):
-    #    abstract = True
+    class ContextTask(TaskBase):
+        abstract = True
 
-    #    def __call__(self, *args, **kwargs):
-    #        with app.app_context():
-    #            return TaskBase.__call__(self, *args, **kwargs)
-    #celery.Task = ContextTask
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
     return celery
 
-
 app = create_app()
-app.app_context().push()
 celery = make_celery(app)

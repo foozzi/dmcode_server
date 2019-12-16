@@ -14,7 +14,8 @@ bp = Blueprint('frontend', __name__, url_prefix='/',
 
 
 def _get_paste(id):
-    paste = Pastes.query.get_or_404(id)
+    paste = db.session.query(Pastes).get_or_404(id)
+    #paste = Pastes.query.get_or_404(id)
     if not paste or not paste.files:
         abort(404)
     return paste
@@ -48,7 +49,7 @@ def lanfing():
     return render_template('landing.html')
 
 
-@bp.route("all_public", methods=['GET'])
+@bp.route("all", methods=['GET'])
 def all_public():
     pastes = Pastes.query.order_by(Pastes.updatetime.desc()).all()
     return render_template('public.html', pastes=pastes)

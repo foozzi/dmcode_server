@@ -16,7 +16,7 @@
                     {% for dir in dirs %}
                     <span id="dir">{{dir}}/</span><br />
                     {% for file in dirs[dir] %}
-                        &nbsp;<a id="file" file_id="{{file.id}}" href="#!">{{file.filename}}</a><br />
+                        &nbsp;<a id="file" file_id="{{file.hash}}" href="#!">{{file.filename}}</a><br />
                     {% endfor %}                    
                     {% endfor %}
                 </div>

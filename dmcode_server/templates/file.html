@@ -3,10 +3,15 @@
 {% block content %}
     <div class="row">
         <div class="col-12">
-                    <a href="/paste/{{file.paste.id}}"><< Back</a>
+                    <a href="/paste/{{file.paste.hash}}"><< Back</a>
                     [{{file.filename}}]
-                    <a href="/file/dl/{{file.id}}">Download</a>
-                    <a href="/file/raw/{{file.id}}">Raw</a>
+                    <a href="/file/dl/{{file.hash}}">Download</a>
+                    <a href="/file/raw/{{file.hash}}">Raw</a>
+                    {% if check_room_sess %}
+                    <a href="/file/edit/{{file.hash}}">Collaborative edit</a>
+                    {% else %}
+                    <a href="/room/join/{{file.paste.hash}}/{{file.hash}}">Collaborative edit1</a>
+                    {% endif %}
                         {{file.filename | highlighter(file.filecontent) | safe}}
         </div>
     </div>

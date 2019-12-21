@@ -11,9 +11,6 @@ table.highlighttable td.linenos {
 table.highlighttable td.code {
     width: 100% !important;
 }
-div.highlight span {
-    font-size: 1.3em;
-}
 div.highlight pre {
     overflow: hidden;
 }

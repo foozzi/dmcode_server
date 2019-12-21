@@ -2,6 +2,7 @@ import os
 from flask import Blueprint, request, render_template, abort, Response
 from dmcode_server import db
 from dmcode_server.files.models import Files, Pastes
+from dmcode_server.rooms.views import _check_auth
 from time import time
 from datetime import datetime
 from flask import current_app as app
@@ -14,12 +15,22 @@ bp = Blueprint('frontend', __name__, url_prefix='/',
 
 
 def _get_paste(id):
-    paste = db.session.query(Pastes).get_or_404(id)
-    #paste = Pastes.query.get_or_404(id)
+    paste = Pastes.query.get_or_404(id)
     if not paste or not paste.files:
         abort(404)
     return paste
 
+def _get_paste_by_hash(hash):
+    paste = Pastes.query.filter_by(hash=hash).first()
+    if not paste or not paste.files:
+        abort(404)
+    return paste
+
+def _get_file_by_hash(hash):
+    file = Files.query.filter_by(hash=hash).first()
+    if not file:
+        abort(404)
+    return file
 
 def _get_file(id):
     file = Files.query.get_or_404(id)
@@ -27,12 +38,14 @@ def _get_file(id):
         abort(404)
     return file
 
-
 @app.template_filter('highlighter')
 def _jinja2_filter_highlighter(filename, code):
     lexer = pygments.lexers.get_lexer_for_filename(filename)
     return highlight(code, lexer, HtmlFormatter(linenos=True))
 
+@app.template_filter('check_room_sess')
+def _jinja2_filter_check_room_sess():
+    return _check_auth() 
 
 @app.template_filter('len')
 def _jinja2_filter_len(arr):
@@ -55,9 +68,9 @@ def all_public():
     return render_template('public.html', pastes=pastes)
 
 
-@bp.route("paste/<id>", methods=['GET'])
-def one_paste(id):
-    paste = _get_paste(id)
+@bp.route("paste/<hash>", methods=['GET'])
+def one_paste(hash):
+    paste = _get_paste_by_hash(hash)
     files = {}
     for file in paste.files:
         if file.filepath not in files:
@@ -68,16 +81,16 @@ def one_paste(id):
 
 @bp.route('fetch_file_info', methods=['POST'])
 def fetch_file_info():
-    if 'id' not in request.values:
+    if 'hash' not in request.values:
         return {'error': True}
 
-    file = Files.query.filter_by(id=request.values['id']).first()
+    file = Files.query.filter_by(hash=request.values['hash']).first()
 
     if not file:
         return {'error': True, 'message': 'File not found'}
 
     return {'error': False, 'file': {
-        'id': file.id,
+        'id': file.hash,
         'filesize': file.filesize,
         'fileext': file.fileext,
         'filehash': file.filehash,
@@ -86,23 +99,28 @@ def fetch_file_info():
         'fileview': file.fileview}}
 
 
-@bp.route('file/<id>', methods=['GET'])
-def file(id):
-    file = _get_file(id)
+@bp.route('file/<hash>', methods=['GET'])
+def file(hash):
+    file = _get_file_by_hash(hash)
     file.fileview += 1
     db.session.add(file)
     db.session.commit()
-    return render_template('file.html', file=_get_file(id))
+    return render_template('file.html', file=file)
 
 
-@bp.route('file/dl/<id>', methods=['GET'])
-def dl(id):
-    file = _get_file(id)
+@bp.route('file/dl/<hash>', methods=['GET'])
+def dl(hash):
+    file = _get_file_by_hash(hash)
     headers = {
         "Content-Disposition": "attachment;filename={}".format(file.filename)}
     return Response(file.filecontent, mimetype="txt/plain", headers=headers)
 
 
-@bp.route('file/raw/<id>', methods=['GET'])
-def raw(id):
-    return render_template('raw_file.html', file=_get_file(id))
+@bp.route('file/raw/<hash>', methods=['GET'])
+def raw(hash):
+    return render_template('raw_file.html', file=_get_file_by_hash(hash))
+
+
+@bp.route('file/edit/<hash>', methods=['GET'])
+def edit(hash):
+    return render_template('edit.html', file=_get_file_by_hash(hash))

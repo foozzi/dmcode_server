@@ -7,6 +7,8 @@ import pickle
 import os
 import shutil
 import hashlib
+import random
+import string
 from time import time
 from flask import current_app as app
 
@@ -38,6 +40,8 @@ def fetch_token():
     paste = Pastes()
     paste.name = name_paste
     paste.token = str(uuid.uuid4())
+    paste.hash = ''.join(random.choice(string.ascii_lowercase+str(string.digits))
+                         for i in range(15))
     paste.expiretime = expire_types[expire_paste]
     paste.createtime = int(time())
     paste.updatetime = int(time())
@@ -105,6 +109,8 @@ def deploy():
                     fileext=fileext,
                     filecontent=dl['content'].decode('utf-8'),
                     filehash=filehash,
+                    hash=''.join(random.choice(string.ascii_lowercase+str(string.digits))
+                                 for i in range(15)),
                     createtime=int(time()),
                     updatetime=int(time())
                 )
@@ -117,4 +123,4 @@ def deploy():
 
     shutil.rmtree(tmp_dir)
 
-    return {'error': False, 'link': request.host_url + 'paste/{}'.format(paste.id)}
+    return {'error': False, 'link': request.host_url + 'paste/{}'.format(paste.hash)}

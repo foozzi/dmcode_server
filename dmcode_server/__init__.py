@@ -12,6 +12,7 @@ celery = Celery()
 db = SQLAlchemy(session_options={"autoflush": False})
 logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     """DEV SIZE"""
@@ -22,18 +23,18 @@ def create_app(test_config=None):
 
     """check if not set `db_url` environment"""
     if db_url is None:
-        db_url = "sqlite:///{}".format(
-                os.path.join(app.instance_path, "db.sqlite"))
+        db_url = "postgres+psycopg2://postgres:798477@localhost:5432/dmcode"
         os.makedirs(app.instance_path, exist_ok=True)
 
     """create tmp dir for uploads"""
     os.makedirs(app.config['TMP_STORAGE'], exist_ok=True)
 
     app.config.from_mapping(
-            SECRET_KEY=os.environ.get("secret", "development"),  # change this in prod
-            SQLALCHEMY_DATABASE_URI=db_url,
-            SQLALCHEMY_TRACK_MODIFICATIONS=False
-            )
+        SECRET_KEY=os.environ.get(
+            "secret", "development"),  # change this in prod
+        SQLALCHEMY_DATABASE_URI=db_url,
+        SQLALCHEMY_TRACK_MODIFICATIONS=False
+    )
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -47,10 +48,11 @@ def create_app(test_config=None):
     app.cli.add_command(init_db_command)
 
     with app.app_context():
-        from dmcode_server import files, frontend
+        from dmcode_server import files, frontend, rooms
 
         app.register_blueprint(files.bp)
         app.register_blueprint(frontend.bp)
+        app.register_blueprint(rooms.bp)
 
         app.add_url_rule('/', endpoint='index')
 

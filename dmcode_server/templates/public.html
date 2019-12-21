@@ -10,7 +10,7 @@
                 {% for paste in pastes %}
                 <div class="card-content">
                     {% set expire = paste.createtime + paste.expiretime %}
-                    <div class="inner"><a href="/paste/{{paste.id}}">{{paste.name}}</a>  [Updated: {{paste.updatetime|strftime}} | Expire: {{expire|strftime}} | Files: {{paste.files|len}}]</div>
+                    <div class="inner"><a href="/paste/{{paste.hash}}">{{paste.name}}</a>  [Updated: {{paste.updatetime|strftime}} | Expire: {{expire|strftime}} | Files: {{paste.files|len}}]</div>
                 </div>
                 {% endfor %}
             {% endif %}

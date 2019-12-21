@@ -15,7 +15,7 @@ $(document).ready(function(){
         $.ajax({
             url: '/fetch_file_info',
             type: 'POST',
-            data: 'id='+file_id,
+            data: 'hash='+file_id,
             success: function(data){
                 if(data.error == true){
                     //
